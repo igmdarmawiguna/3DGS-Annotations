@@ -1,0 +1,42 @@
+[
+    {
+        "id": "a_1788106338871",
+        "position": [
+            0,
+            -0.244,
+            0.003
+        ],
+        "title": "Nista Angga (Bagian Kaki/Bawah)",
+        "text": "Bagian fondasi atau dasar pelinggih yang disebut bataran atau alas kaki bangunan."
+    },
+    {
+        "id": "a_1788106354405",
+        "position": [
+            0.005,
+            -0.576,
+            0.095
+        ],
+        "title": "Madya Angga (Bagian Badan/Tengah)",
+        "text": "Bagian tengah tempat stana (singgasana) atau rong tempat pemujaan, tiang (saka), dinding (pepanilan), dan pintu atau rong"
+    },
+    {
+        "id": "a_1788106378612",
+        "position": [
+            0.016,
+            -0.784,
+            0.125
+        ],
+        "title": "Utama Angga (Bagian Kepala/Atap)",
+        "text": "Bagian atas pelinggih yang terdiri dari unsur murda (puncak), atap (dari ijuk, sirap, atau genteng), serta bagian lis atau ornamen atas lainnya"
+    },
+    {
+        "id": "a_1788106440120",
+        "position": [
+            0.068,
+            -0.366,
+            0.052
+        ],
+        "title": "Kelapa daksina",
+        "text": "Kelapa dari upakara banten pejatian."
+    }
+]

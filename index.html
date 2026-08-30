@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <title>PlayCanvas 3D Gaussian Splat - Anotasi</title>
+    <style>
+        html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+
+        /* ---------- Galeri kartu model ---------- */
+
+        #gallery {
+            position: fixed;
+            inset: 0;
+            overflow-y: auto;
+            background: #14151a;
+            color: #fff;
+            font: 14px/1.5 system-ui, -apple-system, sans-serif;
+            padding: 40px 24px;
+            box-sizing: border-box;
+            z-index: 30;
+        }
+
+        #gallery.hidden { display: none; }
+
+        #gallery h1 {
+            max-width: 1100px;
+            margin: 0 auto 6px;
+            font-size: 22px;
+        }
+
+        #gallery p.subtitle {
+            max-width: 1100px;
+            margin: 0 auto 28px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #gallery-search {
+            max-width: 1100px;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+
+        #gallery-search-input {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            background: #1e1f26;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            font: 14px system-ui, sans-serif;
+        }
+
+        #gallery-search-input:focus {
+            outline: none;
+            border-color: #ff5a36;
+        }
+
+        #gallery-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #model-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .model-card.search-hidden {
+            display: none;
+        }
+
+        /* ---------- Hasil pencarian anotasi ---------- */
+
+        #annotation-results {
+            max-width: 1100px;
+            margin: 28px auto 0;
+        }
+
+        #annotation-results.hidden {
+            display: none;
+        }
+
+        #annotation-results-heading {
+            margin: 0 0 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #annotation-results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .annotation-result {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            background: #1e1f26;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: #fff;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.12s ease;
+        }
+
+        .annotation-result:hover {
+            border-color: #ff5a36;
+        }
+
+        .annotation-result-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .annotation-result-title {
+            margin: 0 0 3px;
+            font-weight: 600;
+        }
+
+        .annotation-result-snippet {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .annotation-result-model {
+            flex-shrink: 0;
+            background: rgba(255, 90, 54, 0.15);
+            color: #ff9376;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 4px 9px;
+            border-radius: 999px;
+        }
+
+        #annotation-results-empty {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        .model-card {
+            background: #1e1f26;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: left;
+            color: #fff;
+            font: inherit;
+            padding: 0;
+            transition: transform 0.12s ease, border-color 0.12s ease;
+        }
+
+        .model-card:hover {
+            transform: translateY(-2px);
+            border-color: #ff5a36;
+        }
+
+        .model-card-thumb {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            background: linear-gradient(135deg, #3a2d55, #1c2a4a);
+        }
+
+        .model-card-body {
+            padding: 12px 14px 14px;
+        }
+
+        .model-card-title {
+            font-weight: 600;
+            margin: 0 0 4px;
+        }
+
+        .model-card-meta {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        #gallery-empty {
+            max-width: 1100px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #gallery-empty code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        #model-search-empty {
+            max-width: 1100px;
+            margin: 0 auto;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        #model-search-empty.hidden {
+            display: none;
+        }
+
+        /* ---------- Viewer 3D ---------- */
+
+        #viewer.hidden { display: none; }
+
+        #back-to-gallery-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 20;
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: none;
+            background: rgba(20, 20, 20, 0.75);
+            color: #fff;
+            font: 14px system-ui, sans-serif;
+            cursor: pointer;
+        }
+
+        #annotation-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .gsplat-pin {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .gsplat-pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ff5a36;
+            border: 2px solid #fff;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+        }
+
+        #add-annotation-btn {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            z-index: 20;
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: none;
+            background: #2b2b2b;
+            color: #fff;
+            font: 14px system-ui, sans-serif;
+            cursor: pointer;
+        }
+
+        #add-annotation-btn.active {
+            background: #ff5a36;
+        }
+
+        #hint {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            z-index: 20;
+            color: rgba(255, 255, 255, 0.7);
+            font: 12px system-ui, sans-serif;
+            max-width: 280px;
+            text-align: right;
+        }
+
+        /* ---------- Modal anotasi ---------- */
+
+        #annotation-modal.hidden { display: none; }
+
+        #annotation-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: rgba(0, 0, 0, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #annotation-modal .modal-box {
+            background: #1e1f26;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 22px;
+            width: 340px;
+            max-width: calc(100vw - 32px);
+            color: #fff;
+            font: 14px/1.5 system-ui, -apple-system, sans-serif;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Kicker kecil di atas judul, menandakan "ini modal apa" tanpa
+           bersaing dengan konten (judul/deskripsi anotasi) yang jadi fokus
+           utama, terutama di mode lihat (view). */
+        #annotation-modal-kicker {
+            margin: 0 0 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #annotation-modal .field-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #annotation-modal .field-label.hidden {
+            display: none;
+        }
+
+        #annotation-modal label {
+            display: block;
+            margin-bottom: 14px;
+        }
+
+        #annotation-modal input[type="text"],
+        #annotation-modal textarea {
+            display: block;
+            width: 100%;
+            background: #14151a;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 6px;
+            padding: 8px 10px;
+            color: #fff;
+            font: 15px/1.4 system-ui, sans-serif;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        #annotation-modal input[type="text"]:focus,
+        #annotation-modal textarea:focus {
+            outline: none;
+            border-color: #ff5a36;
+        }
+
+        /* Mode lihat (view): field judul (input) disembunyikan total, diganti
+           heading ini supaya judul panjang bisa wrap ke beberapa baris —
+           input teks biasa tidak bisa wrap. Deskripsi tetap pakai textarea
+           readonly karena textarea memang bisa wrap multi-baris. */
+        #annotation-view-title {
+            margin: 0 0 12px;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        #annotation-view-title.hidden {
+            display: none;
+        }
+
+        #annotation-title-field.hidden {
+            display: none;
+        }
+
+        #annotation-modal textarea[readonly] {
+            background: transparent;
+            border-color: transparent;
+            padding: 0;
+            resize: none;
+            cursor: default;
+            font-size: 14.5px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        #annotation-modal textarea[readonly].is-empty {
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        #annotation-modal textarea[readonly]:focus {
+            border-color: transparent;
+        }
+
+        #annotation-modal .modal-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+        }
+
+        #annotation-modal .modal-actions-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        #annotation-modal button {
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: none;
+            font: 14px system-ui, sans-serif;
+            cursor: pointer;
+        }
+
+        #annotation-modal button.primary {
+            background: #ff5a36;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        #annotation-modal button.secondary {
+            background: #2b2b2b;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        #annotation-modal button.danger {
+            background: transparent;
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.4);
+        }
+
+        #annotation-modal button.hidden {
+            display: none;
+        }
+    </style>
+    <script type="importmap">
+    {
+        "imports": {
+            "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas/+esm"
+        }
+    }
+    </script>
+    </head>
+    <body>
+        <div id="gallery">
+            <h1>Koleksi 3D Gaussian Splat</h1>
+            <p class="subtitle">Pilih salah satu model di bawah untuk membukanya di viewer beserta anotasinya.</p>
+
+            <div id="gallery-search">
+                <input type="search" id="gallery-search-input" placeholder="Cari nama pura atau anotasi&hellip;">
+            </div>
+
+            <div id="model-grid"></div>
+            <p id="gallery-empty" style="display:none;">
+                Belum ada model. Taruh file <code>.ply</code>/<code>.splat</code>/<code>.sog</code> di folder
+                <code>models/</code>, lalu jalankan <code>node scripts/generate-manifest.mjs</code>.
+            </p>
+            <p id="model-search-empty" class="hidden">Tidak ada pura yang cocok dengan pencarian.</p>
+
+            <div id="annotation-results" class="hidden">
+                <p id="annotation-results-heading">Anotasi ditemukan</p>
+                <div id="annotation-results-list"></div>
+                <p id="annotation-results-empty" style="display:none;">Tidak ada anotasi yang cocok.</p>
+            </div>
+        </div>
+
+        <div id="viewer" class="hidden">
+            <button id="back-to-gallery-btn">&larr; Daftar model</button>
+            <div id="annotation-overlay"></div>
+            <div id="hint">Klik kiri: putar &middot; klik kanan: geser &middot; scroll: zoom</div>
+
+            <div id="annotation-modal" class="hidden">
+                <div class="modal-box">
+                    <p id="annotation-modal-kicker">Tambah Anotasi</p>
+                    <h2 id="annotation-view-title" class="hidden"></h2>
+                    <label id="annotation-title-field">
+                        <span id="annotation-title-label" class="field-label">Judul</span>
+                        <input type="text" id="annotation-title-input" maxlength="80" placeholder="Judul anotasi">
+                    </label>
+                    <label>
+                        <span id="annotation-text-label" class="field-label">Deskripsi</span>
+                        <textarea id="annotation-text-input" rows="4" placeholder="Deskripsi (opsional)"></textarea>
+                    </label>
+                    <div class="modal-actions">
+                        <button id="annotation-delete-btn" class="danger hidden" type="button">Hapus</button>
+                        <div class="modal-actions-right">
+                            <button id="annotation-cancel-btn" class="secondary" type="button">Batal</button>
+                            <button id="annotation-save-btn" class="primary" type="button">Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="module" src="main.js"></script>
+    </body>
+</html>

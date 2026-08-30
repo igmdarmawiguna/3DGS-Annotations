@@ -1,0 +1,16 @@
+[
+    {
+        "id": "balekulkul",
+        "title": "BaleKulkul",
+        "file": "BaleKulkul.ply",
+        "format": "ply",
+        "sizeMB": 87.7
+    },
+    {
+        "id": "shrine",
+        "title": "Shrine",
+        "file": "shrine.ply",
+        "format": "ply",
+        "sizeMB": 31
+    }
+]
