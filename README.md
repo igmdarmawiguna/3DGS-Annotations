@@ -4,6 +4,23 @@ Proyek starter yang menampilkan koleksi 3D Gaussian Splat menggunakan PlayCanvas
 
 Kode ini dibangun berdasarkan panduan resmi PlayCanvas "Using the Engine API" (diverifikasi Agustus 2026), lalu ditambah lapisan galeri dan anotasi HTML yang dibangun sendiri.
 
+## Prasyarat
+
+Cuma butuh **Node.js** terpasang di komputer Anda (versi 18 ke atas; proyek ini dikembangkan dan diuji dengan Node 26). Tidak ada `npm install` atau dependency lain yang perlu dipasang — `server.mjs` dan `scripts/generate-manifest.mjs` murni memakai modul bawaan Node (`node:http`, `node:fs`, `node:path`, `node:url`), dan tidak ada `package.json` di proyek ini.
+
+1. Cek apakah Node.js sudah terpasang:
+   ```bash
+   node --version
+   ```
+   Kalau muncul versi (mis. `v26.5.0`), langsung lanjut ke bagian "Cara menjalankan" di bawah.
+2. Kalau perintah di atas error/`command not found`, install Node.js dulu:
+   - **macOS**: `brew install node` (lewat [Homebrew](https://brew.sh)), atau unduh installer dari [nodejs.org](https://nodejs.org).
+   - **Windows**: unduh installer dari [nodejs.org](https://nodejs.org), pilih versi **LTS**.
+   - **Linux**: pakai package manager distro (mis. `sudo apt install nodejs npm` di Ubuntu/Debian), atau [nodejs.org](https://nodejs.org) untuk versi terbaru.
+3. Buka terminal baru (supaya PATH ter-refresh), lalu cek ulang dengan `node --version` sampai muncul nomor versi.
+
+Setelah itu tinggal jalankan `node server.mjs` seperti biasa — tidak ada langkah instalasi lain.
+
 ## Cara menjalankan
 
 ```bash
