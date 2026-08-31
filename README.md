@@ -1,6 +1,6 @@
 # PlayCanvas 3D Gaussian Splat + Anotasi
 
-Proyek starter yang menampilkan koleksi 3D Gaussian Splat menggunakan PlayCanvas Engine. Halaman pertama menampilkan galeri kartu berisi semua model di folder `models/`; memilih satu kartu membuka model itu di viewer 3D lengkap dengan sistem anotasi (label teks/marker pada titik tertentu di dalam scene).
+Proyek yang menampilkan koleksi 3D Gaussian Splat menggunakan PlayCanvas Engine. Halaman pertama menampilkan galeri kartu berisi semua model di folder `models/`; memilih satu kartu membuka model itu di viewer 3D lengkap dengan sistem anotasi (label teks/marker pada titik tertentu di dalam scene).
 
 Kode ini dibangun berdasarkan panduan resmi PlayCanvas "Using the Engine API" (diverifikasi Agustus 2026), lalu ditambah lapisan galeri dan anotasi HTML yang dibangun sendiri.
 
